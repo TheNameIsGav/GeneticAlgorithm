@@ -21,7 +21,9 @@ public class GeneticAlgorithm {
 	}
 	
 	int popSize = 50;
-	String sentence = "ASD";
+	String sentence = "MAKE MY COMPUTER SPEAK";
+	final String alphabet = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    final int N = alphabet.length();
 	
 	public static void main(String[] args){
 		new GeneticAlgorithm().run();
@@ -33,31 +35,20 @@ public class GeneticAlgorithm {
 		boolean stringNotFound = true;
 		//System.out.println(members);
 		System.out.println(members);
-		//while(stringNotFound) {
+		while(stringNotFound) {
 			members = selectMembers(members);
-			members = reproduce(members);
-			members = mutate(members);
+			members = reproduce(members); //Handles Mutation
+			if(members.contains(sentence)) {
+				stringNotFound = false;
+			}
 			System.out.println(members);
-		//}
+		}
 		System.out.println("Left run");
 		return;
 	}
 
-	private List<String> mutate(List<String> members) {
-		for(String member : members) {
-			for(int i = 0; i < member.length(); i++) {
-				Random r = new Random();
-				char x = member.charAt(r.nextInt(member.length()));
-				//10 % this bitch
-			}
-		}
-		return null;
-	}
-
 	public List<String> generateRandom() {
 		int stringLen = sentence.length();
-	    final String alphabet = " ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	    final int N = alphabet.length();
 
 	    List<String> ret = new ArrayList<String>();
 	    for(int j = 0; j < popSize; j++) {
@@ -117,19 +108,31 @@ public class GeneticAlgorithm {
 			
 			Random r = new Random();
 			int choose = r.nextInt(pop.size());
-			Random x = new Random();
-			int choose2 = x.nextInt(pop.size());
+			int choose2 = r.nextInt(pop.size());
 			//select two random
 			String p1 = pop.get(choose);
 			String p2 = pop.get(choose2);
 			
 			//combine
 			String newStr = p1.substring(0, p1.length()/2) + p2.substring(p1.length()/2);
+			
+			
+			//Mutate
+			int size = newStr.length();
+			char [] newStringArr = newStr.toCharArray();
+			for(int i = 0; i < size; i++) {
+				if (r.nextInt(10) == 0) {
+					newStringArr[i] = alphabet.charAt(r.nextInt(N));
+				}
+			}
+			newStr = String.valueOf(newStringArr);
+			
+			
 			newPopulation.add(newStr);
 		}
 		
 		
-		System.out.println("Left reproduction");
+		//System.out.println("Left reproduction");
 		return newPopulation;
 	}
 	
